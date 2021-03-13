@@ -1,0 +1,203 @@
+﻿@using VNCLNIC.Common.Tools;
+@using VNCLNIC.Models;
+@using VNCLNIC.Models.Data;
+@using VNCLNIC.ViewModels;
+@model List<Clinic>
+@{
+    var lsClinicType = ViewBag.ClincType as List<ClinicTypeBoxViewModel>;
+}
+
+
+<!-- Modal -->
+<div class="modal fade" id="MapModel" tabindex="-1" role="dialog" aria-labelledby="MapModel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content bg-secondary" id="modal-body-map">
+        </div>
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-xl-3 order-xl-2">
+        <div class="card">
+            <!-- Card header -->
+            <div class="card-header">
+                <!-- Title -->
+                <h5 class="h3 mb-0">Bộ lọc tìm kiếm</h5>
+            </div>
+            <!-- Card body -->
+            <div class="card-body">
+                @{
+                    if (lsClinicType.Count() > 0)
+                    {
+                        <h5 class="h5 mb-2">Loại phòng khám</h5>
+                        foreach (var item in lsClinicType)
+                        {
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" id="clinicType_@item.Id" name="clinicType" value="@item.Id" type="checkbox" checked="@item.IsChecked">
+                                <label class="custom-control-label" for="clinicType_@item.Id">@item.Name</label>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-primary" onclick="Apply()">Áp dụng</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-9 order-xl-2">
+
+        <div class="card">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col-8">
+                        <h3 class="mb-0">Danh sách phòng khám </h3>
+                    </div>
+                    <div class="col-4 text-right">
+                        <button onclick="getLocation()" class="btn btm-sm btn-primary">Gần bạn nhất</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+
+                @if (Model.Count == 0)
+                {
+                    @Html.Raw("<span class='text-center'>Không tìm thấy dữ liệu.</span>");
+                }
+                else
+                {
+
+                    foreach (var item in Model)
+                    {
+                        <div class="card mb-2">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <!-- Avatar -->
+                                        <a href="#" class="avatar avatar-lg rounded-circle">
+                                            @if (item.Logo != null)
+                                            {
+                                                <img src="@item.Logo">
+                                            }
+                                            else
+                                            {
+                                                <img src="~/Content/image/Logo/VNCLINIC-Icon.png" />
+                                            }
+                                        </a>
+                                    </div>
+                                    <div class="col ml--2">
+                                        <h4 class="mb-1">
+                                            <a href="#">@item.Name</a>
+                                        </h4>
+                                        <small><i class="fa fa-phone text-blue" aria-hidden="true"></i> @item.HotLine</small><br />
+                                        @using (Ajax.BeginForm("SearchMap", "Home", new AjaxOptions
+                                        {
+                                            InsertionMode = InsertionMode.Replace,
+                                            HttpMethod = "GET",
+                                            LoadingElementId = "loader",
+                                            UpdateTargetId = "modal-body-map"
+
+                                        }, new { @id = "searchMap" }))
+                                        {
+
+                                            <input type="hidden" value="10.8677687" name="Lat" />
+                                            <input type="hidden" value="106.6416996" name="Lng" />
+                                            <a href="#" onclick="LoadMap()">
+                                                <small>
+                                                    <i class="ni ni-pin-3 text-orange" aria-hidden="true"></i> @item.Address, @item.District.Name, @item.City.Name
+                                                </small>
+                                            </a>
+                                        }
+                                    </div>
+                                    <div class="col-auto">
+                                        @if (ViewBag.Type == 0)
+                                        {
+
+                                            <button type="button" class="btn btn-sm btn-primary btn-icon">
+                                                <span class="btn-inner--icon"><i class="ni ni-bold-right text-white" aria-hidden="true"></i></span>
+                                                <span class="btn-inner--text">Chi tiết</span>
+                                            </button>
+
+                                            <button type="button" class="btn btn-sm btn-danger bg-gradient-red text-white btn-icon">
+                                                <span class="btn-inner--icon"><i class="ni ni-calendar-grid-58 text-white"></i></span>
+                                                <span class="btn-inner--text">Đặt lịch</span>
+                                            </button>
+                                            <a href="tel:@item.HotLine" class="btn btn-sm btn-success bg-green text-white btn-icon">
+                                                <span class="btn-inner--icon"><i class="ni ni-mobile-button" aria-hidden="true"></i></span>
+                                                <span class="btn-inner--text">Gọi điện</span>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-sm btn-danger bg-gradient-red text-white btn-icon">
+                                                <span class="btn-inner--text">Chọn</span>
+                                                <span class="btn-inner--icon"><i class="ni ni-bold-right text-white" aria-hidden="true"></i></span>
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+
+            </div><!-- Card footer --><div class="card-footer py-4">
+                <nav aria-label="...">
+                    <ul class="pagination justify-content-end mb-0">
+                        @{
+                            if (Model.Count > 0)
+                            {
+                                @Html.Raw(ViewBag.Paging)
+                            }
+                        }
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    function updatePageCustom(num) {
+        $('#selPage').val(num);
+        var searchhome = $('#searchHome').val();
+        var CityHome = $('#CityHome').val();
+        var DistrictHome = $('#DistrictHome').val();
+        var ClinicTypeHome = $('#ClinicTypeHome').val();
+        var selPage = $('#selPage').val();
+        $("#list-clinic-result").load(window.location.origin + "/Home/Search?searchhome=" + searchhome
+            + "&CityHome=" + CityHome
+            + "&DistrictHome=" + DistrictHome
+            + "&ClinicTypeHome=" + ClinicTypeHome
+            + "&selPage=" + selPage
+        );
+    }
+    function Apply() {
+        var clinictype = [];
+        $('input[name=clinicType').each(function () {
+            if (this.checked) {
+                clinictype.push(this.value);
+            }
+        });
+        $('#selPage').val(1);
+        $('#ClinicTypeHome').val(clinictype);
+        var searchhome = $('#searchHome').val();
+        var CityHome = $('#CityHome').val();
+        var DistrictHome = $('#DistrictHome').val();
+        var ClinicTypeHome = $('#ClinicTypeHome').val();
+        var selPage = $('#selPage').val();
+        $("#list-clinic-result").load(window.location.origin + "/Home/Search?searchhome=" + searchhome
+            + "&CityHome=" + CityHome
+            + "&DistrictHome=" + DistrictHome
+            + "&ClinicTypeHome=" + ClinicTypeHome
+            + "&selPage=" + selPage
+        );
+    }
+    function LoadMap() {
+        $("#modal-body-map").load(window.location.origin + "/Home/SearchMap?Lat=" + 10.8677687
+            + "&Lng=" + 106.6416996
+        );
+    }
+</script>

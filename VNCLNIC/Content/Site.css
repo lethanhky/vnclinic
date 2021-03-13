@@ -1,0 +1,53 @@
+﻿/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+.select2-container .select2-selection--single {
+    height: calc(2.25rem + 2px) !important;
+    padding: .75rem 1rem;
+    border: 1px solid #ced4da;
+    display: block;
+}
+
+.select2-container {
+    width: 100% !important;
+}
+
+.select2-selection__arrow {
+    padding-top: 2rem;
+}
+
+.select2-selection__choice {
+    background: linear-gradient( 87deg,#5e72e4 0,#825ee4 100%) !important;
+    color: #ffffff !important;
+}
+
+.select2-container--default .select2-purple .select2-results__option--highlighted[aria-selected], .select2-container--default .select2-purple .select2-results__option--highlighted[aria-selected]:hover, .select2-purple .select2-container--default .select2-results__option--highlighted[aria-selected], .select2-purple .select2-container--default .select2-results__option--highlighted[aria-selected]:hover {
+    background: linear-gradient( 87deg,#5e72e4 0,#825ee4 100%) !important;
+    color: #fff;
+}
+.div-transparent-black{
+    padding:20px 20px;
+    background:rgba(0, 0, 0, 0.3);
+
+}
+.select2-container--default .select2-search--dropdown .select2-search__field {
+    height: calc(2.05rem + 1px);
+}
+.select2-container--open .select2-dropdown{
+    z-index:2000;
+}
+
+@media (max-width:992px) {
+    [class*=col-lg-] {
+        margin-top: 10px;
+    }
+}

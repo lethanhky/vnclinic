@@ -1,0 +1,173 @@
+﻿
+@{
+    VNCLNIC.Data.DataContext db = new VNCLNIC.Data.DataContext();
+}
+<nav class="navbar navbar-top navbar-horizontal navbar-transparent bg-gradient-primary navbar-main navbar-expand-lg navbar-light">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <img src="~/Content/image/Logo/Logo-Text-White-Gold.png" />
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse navbar-custom-collapse collapse" id="navbar-collapse">
+            <div class="navbar-collapse-header">
+                <div class="row">
+                    <div class="col-6 collapse-brand">
+                        <a href="../../pages/dashboards/dashboard.html">
+                            <img src="~/Content/image/512x512bb.jpg">
+                        </a>
+                    </div>
+                    <div class="col-6 collapse-close">
+                        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                            <span></span>
+                            <span></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <ul class="navbar-nav mr-auto">
+                @if (User != null)
+                {
+                    var user = db.Users.Where(x => x.Id == User.UserId).FirstOrDefault();
+                    if (user.UserType == VNCLNIC.Common.Enums.UserType.CLINIC)
+                    {
+                        <li class="nav-item">
+                            <a href="../../pages/examples/register.html" class="nav-link">
+                                <span class="nav-link-inner--text">Truy cập phòng khám</span>
+                            </a>
+                        </li>
+                    }
+                }
+
+                <li class="nav-item">
+                    <a href="../../pages/dashboards/dashboard.html" class="nav-link">
+                        <span class="nav-link-inner--text">Trang chủ</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../../pages/examples/pricing.html" class="nav-link">
+                        <span class="nav-link-inner--text">Giới thiệu</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../../pages/examples/login.html" class="nav-link">
+                        <span class="nav-link-inner--text">Liên hệ</span>
+                    </a>
+                </li>
+            </ul>
+            <hr class="d-lg-none">
+            <ul class="navbar-nav align-items-lg-center ml-lg-auto">
+                <li class="nav-item">
+                    <a class="nav-link nav-link-icon" href="https://www.facebook.com/creativetim" target="_blank" data-toggle="tooltip" data-original-title="Like us on Facebook">
+                        <i class="fab fa-facebook-square"></i>
+                        <span class="nav-link-inner--text d-lg-none">Facebook</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-icon" href="https://www.instagram.com/creativetimofficial" target="_blank" data-toggle="tooltip" data-original-title="Follow us on Instagram">
+                        <i class="fab fa-instagram"></i>
+                        <span class="nav-link-inner--text d-lg-none">Instagram</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-icon" href="https://twitter.com/creativetim" target="_blank" data-toggle="tooltip" data-original-title="Follow us on Twitter">
+                        <i class="fab fa-twitter-square"></i>
+                        <span class="nav-link-inner--text d-lg-none">Twitter</span>
+                    </a>
+                </li>
+            </ul>
+
+            @if (User != null)
+            {
+                <ul class="navbar-nav align-items-center  ml-auto ml-md-0 ">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="media align-items-center">
+                                <span class="avatar avatar-sm rounded-circle bg-white">
+
+
+                                    @if (User != null)
+                                    {
+                                        var user = db.Users.Where(x => x.Id == User.UserId).FirstOrDefault();
+                                        if (user.Image != null)
+                                        {
+                                            <img src="@{
+                                var url = string.Format ( "{0}://{1}{2}",Request.Url.Scheme,Request.Url.Authority,Url.Content ( "~" ) );
+                                @url
+                        }Resource/VCIMG?appx=@user.Image">
+                                        }
+                                        else
+                                        {
+                                            <img src="~/Content/image/person-512.png" />
+                                        }
+                                    }
+                                </span>
+                                <div class="media-body  ml-2  d-none d-lg-block">
+                                    <span class="mb-0 text-sm  font-weight-bold">@User.FullName</span>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="dropdown-menu  dropdown-menu-right ">
+                            <div class="dropdown-header noti-title">
+                                <h6 class="text-overflow m-0">Xin chào @User.FullName !</h6>
+                            </div>
+                            @using (Ajax.BeginForm("UpdateProfile", "User", null, new AjaxOptions
+                            {
+                                InsertionMode = InsertionMode.Replace,
+                                HttpMethod = "GET",
+                                LoadingElementId = "loader",
+                                UpdateTargetId = "modal-body-updateprofile"
+
+                            }, new { @id = "updateProfileForm" }))
+                            {
+                                <input type="hidden" name="userId" value="@User.UserId" />
+                                <button class="dropdown-item" type="submit">
+                                    <i class="ni ni-single-02"></i>
+                                    <span>Thông tin cá nhân</span>
+                                </button>
+                            }
+                            @using (Ajax.BeginForm("ChangePassword", "Account", null, new AjaxOptions
+                            {
+                                InsertionMode = InsertionMode.Replace,
+                                HttpMethod = "GET",
+                                LoadingElementId = "loader",
+                                UpdateTargetId = "modal-body-changepassword"
+
+                            }, new { @id = "changePasswordForm" }))
+                            {
+                                <input type="hidden" name="id" value="@User.UserId" />
+                                <button class="dropdown-item" type="submit">
+                                    <i class="ni ni-settings-gear-65"></i>
+                                    <span>Đổi mật khẩu</span>
+                                </button>
+                            }
+                            <div class="dropdown-divider"></div>
+                            @using (Html.BeginForm("LogOut", "Account", FormMethod.Post, new
+                            {
+                                id = "logoutForm",
+                                @class = ""
+                            }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <a href="javascript:document.getElementById('logoutForm').submit()" class="dropdown-item">
+                                    <i class="ni ni-button-power"></i>
+                                    <span>Logout</span>
+                                </a>
+                            }
+                        </div>
+                    </li>
+                </ul>
+            }
+            else
+            {
+                <a href="~/Account/Login" class="btn btn-neutral btn-icon">
+                    <span class="btn-inner--icon">
+                        <i class="fas fa-shopping-cart mr-2"></i>
+                    </span>
+                    <span class="nav-link-inner--text">Đăng nhập</span>
+                </a>
+            }
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,96 @@
+﻿<div class="card-body">
+
+    <div class="row">
+        <div class="col-lg-12 col-md-10 text-center">
+            @using (Ajax.BeginForm("Search", "Home", new AjaxOptions
+            {
+                InsertionMode = InsertionMode.Replace,
+                HttpMethod = "GET",
+                LoadingElementId = "loader",
+                UpdateTargetId = "list-clinic-result"
+
+            }, new { @id = "searchForm" }))
+            {
+                <input type="hidden" id="type" name="type" value="1" />
+                <div class="div-transparent-black bg-gradient-blue">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-12">
+                            <div class="input-group input-group-alternative input-group-merge">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                </div>
+                                <input name="searchHome" id="searchHome" class="form-control" placeholder="Tìm kiếm" type="text">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-12">
+                            <select name="CityHome" id="CityHome" class="form-control select2 select2-purple" data-dropdown-css-class="select2-purple">
+                                <option value="-1" selected>Tỉnh/Thành</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-md-12">
+                            <select name="DistrictHome" id="DistrictHome" class="form-control select2 select2-purple" data-dropdown-css-class="select2-purple">
+                                <option value="-1" selected>Quận/Huyện</option>
+                            </select>
+                        </div>
+                        <input type="hidden" id="selPage" name="selPage" value="1" />
+                        <div class="col-lg-3 col-md-8">
+                            <button type="button" class="btn btn-warning w-100" id="doFilter" onclick="LoadClinic()">
+                                <i class="fa fa-search"></i>
+                                Tìm kiếm
+                            </button>
+                        </div>
+                        <input type="hidden" id="ClinicTypeHome" name="ClinicTypeHome" value="" />
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>
+<div class="container-fluid mt-2" id="list-clinic-result">
+
+</div>
+<div class="card-footer">
+    <button class="float-right btn btn-primary">Tiếp tục <i class="fas fa-angle-right"></i></button>
+</div>
+<script>
+    $('#CityHome').find('option').not(':first').remove();
+    fetch(window.location.origin + "/Home/Cities")
+        .then(res => res.json())
+        .then(data => {
+            $("#CityHome").select2({
+                miniumInputLength: 2,
+                data: data,
+            });
+        });
+
+
+    $("#CityHome").change(function () {
+        $('#DistrictHome').find('option').not(':first').remove();
+        fetch(window.location.origin + "/Clinic/District?CityId=" + $("#CityHome").val())
+            .then(res => res.json())
+            .then(data => {
+                $("#DistrictHome").select2({
+                    miniumInputLength: 2,
+                    data: data
+                });
+            });
+    });
+
+    function LoadClinic() {
+        var searchhome = $('#searchHome').val();
+        var CityHome = $('#CityHome').val();
+        var DistrictHome = $('#DistrictHome').val();
+        var ClinicTypeHome = $('#ClinicTypeHome').val();
+        var selPage = $('#selPage').val();
+        var type = $('#type').val();
+        console.log(searchhome, CityHome);
+        $("#list-clinic-result").load(window.location.origin + "/Home/Search?searchhome=" + searchhome
+            + "&CityHome=" + CityHome
+            + "&DistrictHome=" + DistrictHome
+            + "&ClinicTypeHome=" + ClinicTypeHome
+            + "&selPage=" + selPage
+            + "&type=" + type
+        );
+    }
+</script>

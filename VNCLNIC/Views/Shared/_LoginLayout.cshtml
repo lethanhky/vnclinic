@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+    <link href="~/Content/argon/vendor/nucleo/css/nucleo.css" rel="stylesheet" />
+    <link href="~/Content/argon/vendor/fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
+    <link href="~/Content/argon/css/argon.css" rel="stylesheet" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    @*Giải quyết sweetalret show bị ẩn dưới modal*@
+    <style type="text/css">
+        .swal2-container {
+            z-index: 100000000;
+        }
+    </style>
+</head>
+<body class="bg-default g-sidenav-show g-sidenav-pinned">
+    <div>
+        <div class="main-content">
+            @RenderBody()
+        </div>
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+
+    <!-- Core -->
+    <script src="~/Content/argon/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="~/Content/argon/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Content/argon/vendor/js-cookie/js.cookie.js"></script>
+    <script src="~/Content/argon/vendor/jquery.scrollbar/jquery.scrollbar.min.js"></script>
+    <script src="~/Content/argon/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js"></script>
+    <!-- Optional JS -->
+    <script src="~/Content/argon/vendor/chart.js/dist/Chart.min.js"></script>
+    <script src="~/Content/argon/vendor/chart.js/dist/Chart.extension.js"></script>
+    <!-- Argon JS -->
+    <script src="~/Content/argon/js/argon.js"></script>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

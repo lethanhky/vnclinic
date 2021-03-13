@@ -1,0 +1,204 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - VNCLINIC</title>
+
+    @*<link rel="icon" type="image/png" href="~Content/image/Logo/VNCLINIC-Icon.png" />*@
+    <script src="~/Content/argon/vendor/jquery/dist/jquery.min.js"></script>
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+    <link href="~/Content/argon/vendor/nucleo/css/nucleo.css" rel="stylesheet" />
+    <link href="~/Content/argon/vendor/fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
+    <link href="~/Content/argon/css/argon.min.css" rel="stylesheet" />
+    <link href="~/Content/argon/vendor/toastr/toastr.min.css" rel="stylesheet" />
+    <script src="~/Content/argon/vendor/toastr/toastr.min.js"></script>
+    <link href="~/Content/argon/vendor/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet" />
+    <link href="~/Content/argon/vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
+
+    <!-- Select2 -->
+    <link href="~/Content/argon/vendor/select2/css/select2.min.css" rel="stylesheet" />
+    <link href="~/Content/argon/vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+
+    @Scripts.Render("~/Scripts/search-ajax.js")
+    @Scripts.Render("~/Scripts/utils.js")
+    @Scripts.Render("~/Scripts/jquery.validate.min.js")
+    @Scripts.Render("~/Scripts/jquery.validate.unobtrusive.min.js")
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+    <script src="~/Scripts/general/vnclinic.js"></script>
+
+    @*Giải quyết sweetalret show bị ẩn dưới modal*@
+    <style type="text/css">
+        .swal2-container {
+            z-index: 100000000;
+        }
+    </style>
+</head>
+<body>
+
+    @Html.Partial("_Sidebar")
+    <div class="main-content" id="panel">
+        @Html.Partial("_Navbar")
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+
+
+    <div class="modal fade" id="UpdateProfileModal" tabindex="-1" role="dialog" aria-labelledby="UpdateProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content bg-secondary">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Thông tin cá nhân</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="form-update-profile">
+                    <div class="modal-body" id="modal-body-updateprofile">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Huỷ</button>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="btn-inner--text">Lưu</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ChangePasswordModel" tabindex="-1" role="dialog" aria-labelledby="ChangePasswordModelLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content bg-secondary" id="modal-body-changepassword">
+
+            </div>
+        </div>
+    </div>
+
+    <div id="loader" style="display:none;position:absolute;top:40%;left:45%;padding:5px;z-index:3000">
+        <img src="~/Content/image/real.gif" style="width:150px;height:150px" />
+    </div>
+    <!-- Core -->
+    <script src="~/Content/argon/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Content/argon/vendor/js-cookie/js.cookie.js"></script>
+    <script src="~/Content/argon/vendor/jquery.scrollbar/jquery.scrollbar.min.js"></script>
+    <script src="~/Content/argon/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js"></script>
+    <!-- Optional JS -->
+    <script src="~/Content/argon/vendor/chart.js/dist/Chart.min.js"></script>
+    <script src="~/Content/argon/vendor/chart.js/dist/Chart.extension.js"></script>
+    <script src="~/Content/argon/vendor/moment/moment.min.js"></script>
+    <script src="~/Content/argon/vendor/fullcalendar/dist/fullcalendar.min.js"></script>
+    <script src="~/Content/argon/vendor/sweetalert2/dist/sweetalert2.min.js"></script>
+    <script src="~/Content/argon/vendor/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="~/Content/argon/vendor/dropzone/dist/min/dropzone.min.js"></script>
+    <!-- Google Map -->
+    <!-- Argon JS -->
+    <script src="~/Content/argon/js/argon.min.js"></script>
+    <!-- Select2 -->
+    <script src="~/Content/argon/vendor/select2/js/select2.full.min.js"></script>
+    <script src="~/Content/demo.min.js"></script>
+
+    <script>
+        document.addEventListener('fetchStart', function () {
+            $("#ezloader").show();
+        });
+
+        document.addEventListener('fetchEnd', function () {
+            $("#ezloader").hide();
+        });
+
+        $("#form-update-profile").submit(function (e) {
+            e.preventDefault();
+            var serializedForm = $(this).serializeArray();
+
+            var formData = new FormData($('#form-update-profile').get(0));
+
+            var file = document.getElementById("Avatar").files[0];
+
+            formData.append("Avatar", file);
+
+            console.log(formData);
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                data: formData,
+                contentType: false,
+                processData: false,
+                url: "/User/UpdateProfile",
+                success: function (item) {
+                    if (item.success) {
+                        $('#UpdateProfileModal').modal('hide');
+                        swal({ title: "Success", text: item.message, type: "success", buttonsStyling: !1, confirmButtonClass: "btn btn-success" });
+
+                        doCommit();
+                    } else {
+                        swal({ title: "Failed", text: item.message, type: "warning", buttonsStyling: !1, confirmButtonClass: "btn btn-warning" })
+                    }
+                },
+                error: function (err) {
+                    $('#UpdateProfileModal').modal('hide');
+                    setTimeout(function () {
+                        swal({ title: "Failed", text: "Lưu dữ liệu không thành công", type: "warning", buttonsStyling: !1, confirmButtonClass: "btn btn-warning" })
+                    }, 500);
+                    console.log(err);
+                }
+            });
+        });
+
+        function User(FullName, Email, PhoneNumber, Address) {
+            this.FullName = FullName;
+            this.Email = Email;
+            this.PhoneNumber = PhoneNumber;
+            this.Address = Address;
+        }
+        // Store a copy of the fetch function
+        var _oldFetch = fetch;
+
+        // Create our new version of the fetch function
+        window.fetch = function () {
+
+            // Create hooks
+            var fetchStart = new Event('fetchStart', { 'view': document, 'bubbles': true, 'cancelable': false });
+            var fetchEnd = new Event('fetchEnd', { 'view': document, 'bubbles': true, 'cancelable': false });
+
+            // Pass the supplied arguments to the real fetch function
+            var fetchCall = _oldFetch.apply(this, arguments);
+
+            // Trigger the fetchStart event
+            document.dispatchEvent(fetchStart);
+
+            fetchCall.then(function () {
+                // Trigger the fetchEnd event
+                document.dispatchEvent(fetchEnd);
+            }).catch(function () {
+                // Trigger the fetchEnd event
+                document.dispatchEvent(fetchEnd);
+            });
+
+            return fetchCall;
+        };
+
+
+        $(function () {
+
+
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
+            $('.select2').select2();
+
+        })
+    </script>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

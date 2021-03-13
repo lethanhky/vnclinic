@@ -1,0 +1,61 @@
+﻿@using VNCLNIC.Models;
+@model  User
+
+<input name="Id" id="Id" value="@Model.Id" type="hidden" class="form-control form-control-alternative">
+
+<span class="text-success">@ViewBag.Message</span>
+
+<div class="form-group">
+    <label for="example-text-input" class="form-control-label">Tên tài khoản</label>
+    <input name="Username" id="Username" value="@Model.Username" type="text" class="form-control form-control-alternative" readonly>
+</div>
+<div class="form-group">
+    <div class="row">
+        <div class="col-md-6">
+            <label>Logo</label>
+            <div class="input-group">
+                <input type="file" class="custom-file-input p-1 file" id="Avatar" name="Avatar" onchange="img2Base64(this,'Avatar_dis','Avatar_hidden')">
+                <label class="custom-file-label" for="Avatar">Tải ảnh lên</label>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div style="text-align:center">
+                <div>
+                    @if (Model.Image != null)
+                    {
+                        <img src="@{
+                                var url = string.Format ( "{0}://{1}{2}",Request.Url.Scheme,Request.Url.Authority,Url.Content ( "~" ) );
+                                @url
+                        }Resource/VCIMG?appx=@Model.Image" id="Avatar_dis" style="width:50%;height:50%" />
+                    }
+                    else
+                    {
+                        <img src="~/Content/image/person-512.png" id="Avatar_dis" style="width:50%;height:50%" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <label for="example-text-input" class="form-control-label">Họ và tên</label>
+    <input name="FullName" id="FullName" value="@Model.FullName" type="text" class="form-control form-control-alternative" placeholder="Nhập đầy đủ họ & tên">
+</div>
+<div class="form-group">
+    <label for="example-text-input" class="form-control-label">Email</label>
+    <input name="Email" id="Email" value="@Model.Email" type="email" class="form-control form-control-alternative" placeholder="Nhập email">
+</div>
+<div class="form-group">
+    <label for="example-text-input" class="form-control-label">Số điện thoại</label>
+    <input name="PhoneNumber" id="PhoneNumber" value="@Model.PhoneNumber" type="tel" pattern="[0][0-9]{9}" class="form-control form-control-alternative" placeholder="Nhập số điện thoại">
+</div>
+<div class="form-group">
+    <label for="example-text-input" class="form-control-label">Địa chỉ</label>
+    <input name="Address" id="Address" value="@Model.Address" type="text" class="form-control form-control-alternative" placeholder="Nhập địa chỉ">
+</div>
+
+<script>
+    $(document).ready(function (e) {
+        $('#UpdateProfileModal').modal('show');
+    });
+</script>

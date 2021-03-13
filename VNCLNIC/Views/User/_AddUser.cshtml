@@ -1,0 +1,241 @@
+﻿﻿@using VNCLNIC.Models;
+@model User
+@{
+    var ckactive = "";
+    var ckdoctor = "";
+    if (Model.IsActive == true)
+    {
+        ckactive = "checked";
+    }
+    if (Model.IsDoctor == true)
+    {
+        ckdoctor = "checked";
+    }
+}
+
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Thông tin người dùng</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<form role="form" id="form-role">
+    <div class="modal-body">
+        <input name="Id" id="Id" value="@Model.Id" type="hidden" class="form-control form-control-alternative">
+
+        <div class="form-group">
+            <label for="example-text-input" class="form-control-label">Tên tài khoản</label>
+            <input name="Username" id="Username" value="@Model.Username" type="text" class="form-control form-control-alternative" placeholder="Nhập tên tài khoản">
+        </div>
+        <div class="form-group">
+            <label for="example-text-input" class="form-control-label">Mật khẩu</label>
+            <input name="Pwd" id="Pwd" value="@Model.Password" type="password" class="form-control form-control-alternative" placeholder="Nhập mật khẩu">
+        </div>
+        <div class="form-group">
+            <label for="example-text-input" class="form-control-label">Xác nhận mật khẩu</label>
+            <input name="ConfirmPwd" id="ConfirmPwd" value="" type="password" class="form-control form-control-alternative" placeholder="Nhập lại mật khẩu">
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="example-text-input" class="form-control-label">Kích hoạt?</label> <br />
+                    <label class="custom-toggle">
+                        <input name="IsActive" id="IsActive" type="checkbox" @ckactive>
+                        <span class="custom-toggle-slider rounded-circle"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="example-text-input" class="form-control-label">Bạn là bác sĩ ?</label> <br />
+                    <label class="custom-toggle">
+                        <input name="IsDoctor" id="IsDoctor" type="checkbox" @ckdoctor>
+                        <span class="custom-toggle-slider rounded-circle"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <label for="example-text-input" class="form-control-label">Chọn các quyền</label>
+        @{
+            int tempCount = 0; //biến đếm để chia table ra là 2 cột
+            string html = "";// xuất giao diện table
+            string name = " name='Role"; // name của role cần lấy
+        }
+
+        @foreach (var item in ViewBag.Roles)
+        {
+            var ck = "";
+            if (Model.Roles != null && Model.Roles.Any(x => x.Id == item.Id))
+            {
+                ck = "checked";
+            }
+            if (tempCount % 2 == 0)
+            {
+                html += "<tr>";
+            }
+            html += "<td><div class='custom-control custom-checkbox'><input class='custom-control-input' type='checkbox'" + ck + " " + name + item.Id + "'" + "value=" + "'" + item.Id + "' id='Role" + item.Id + "'" + "/>&nbsp;" +
+                "<label class='custom-control-label' for='Role" + item.Id + "'>" + item.RoleName + "</label> </div>"
+                + "</td>";
+
+            if (tempCount % 2 > 0)
+            {
+                html += "</tr>";
+            }
+
+            tempCount++;
+
+
+
+
+        }
+        @{
+            if (tempCount % 2 > 0)
+            {
+                html += "<td>&nbsp;</td></tr>";
+            }
+        }
+
+
+        @{html = "<table class='table table-bordered table-hover' style='width:100%;'>" + html + "</table>";}
+
+        @Html.Raw(html)
+        <div class="form-group">
+            <label for="example-text-input" class="form-control-label">Họ và tên</label>
+            <input name="Fullname" id="Fullname" value="@Model.FullName" type="text" class="form-control form-control-alternative" placeholder="Nhập đầy đủ họ và tên">
+        </div>
+        <div class="form-group">
+            <label for="example-text-input" class="form-control-label">Email</label>
+            <input name="Email" id="Email" value="@Model.Email" type="email" class="form-control form-control-alternative" placeholder="Nhập địa chỉ email">
+        </div>
+        <div class="form-group">
+            <label for="example-text-input" class="form-control-label">Số điện thoại</label>
+            <input name="Phone" id="Phone" value="@Model.PhoneNumber" type="tel" pattern="^\d{10}$" class="form-control form-control-alternative" placeholder="Nhập số điện thoại" required>
+        </div>
+        <div class="form-group">
+            <label for="example-text-input" class="form-control-label">Địa chỉ</label>
+            <input name="Address" id="Address" value="@Model.Address" type="text" class="form-control form-control-alternative" placeholder="Nhập địa chỉ">
+        </div>
+        <label for="example-text-input" class="form-control-label">Loại người dùng</label>
+        <div class="form-check btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-secondary active">
+                <input type="radio" name="usertype" id="option1" value="0" autocomplete="off" checked> Khách hàng
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="usertype" id="option2" value="1" autocomplete="off"> Phòng khám
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="usertype" id="option3" value="2" autocomplete="off"> Hệ thống
+            </label>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Huỷ</button>
+        <button type="button" id="btn-submit-role" class="btn btn-primary">
+            <span class="btn-inner--text">Lưu</span>
+        </button>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function (e) {
+        $('#UserModel').modal('show');
+        $("#form-role").validate({
+            rules: {
+                Username: {
+                    required: true,
+                    minlength: 11
+                },
+                Pwd: {
+                    required: true,
+                    minlength: 6
+                },
+                ConfirmPwd: {
+                    required: true,
+                    equalTo: "#Pwd",
+                }
+            },
+            messages: {
+                Username: {
+                    required: "bắt buộc nhập tên tài khoản !",
+                    minlength: "hãy nhập tối thiểu 11 ký tự"
+                },
+                Pwd: {
+                    required: "bắt buộc nhập mật khẩu !",
+                    minlength: "hãy nhập ít nhất 6 ký tự"
+                },
+                ConfirmPwd: {
+                    required: "bắt buộc nhập xác nhận mật khẩu !",
+                    equalTo: "xác nhận mật khẩu không khớp !"
+                }
+            }
+        });
+    });
+
+    $('#btn-submit-role').click(function (e) {
+        $("#form-role").submit();
+    });
+
+    $("#form-role").submit(function (e) {
+        e.preventDefault();
+        var serializedForm = $(this).serializeArray();
+        console.log(serializedForm);
+        var roles = [];
+        $('.custom-control-input').each(function (e) {
+            if (this.checked) {
+                roles.push($(this).val());
+            }
+        });
+        var username = $('#Username').val();
+        var password = $('#Pwd').val();
+        var confirmPassword = $('#ConfirmPwd').val();
+        var fullname = $('#Fullname').val();
+        var email = $('#Email').val();
+        var phone = $('#Phone').val();
+        var address = $('#Address').val();
+        var usertype = $("input[name='usertype']:checked").val();
+        var isActive = false;
+        var isDoctor = false;
+
+        $.each(serializedForm, function (i, field) {
+            if (field.name == "IsActive") { isActive = true }
+            if (field.name == "IsDoctor") { isDoctor = true }
+        });
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            data: {
+                username: username,
+                password: password,
+                fullname: fullname,
+                isActive: isActive,
+                isDoctor: isDoctor,
+                email: email,
+                phone: phone,
+                address: address,
+                usertype: usertype,
+                roles: roles
+            },
+            url: "/User/AddUser",
+            success: function (item) {
+                if (item.success) {
+                    $('#UserModel').modal('hide');
+                    swal({ title: "Success", text: item.message, type: "success", buttonsStyling: !1, confirmButtonClass: "btn btn-success" });
+
+                    doCommit();
+                } else {
+                    swal({
+                        title: "Failed", text: item.message, type: "warning", buttonsStyling: !1, confirmButtonText: "Back", confirmButtonClass: "btn btn-warning"
+                    });
+                }
+            },
+            error: function (err) {
+                $('#UserModel').modal('hide');
+                setTimeout(function () {
+                    swal({ title: "Failed", text: "Lưu dữ liệu không thành công", type: "warning", buttonsStyling: !1, confirmButtonClass: "btn btn-warning" })
+                }, 500);
+                console.log(err);
+            }
+        });
+    });
+</script>

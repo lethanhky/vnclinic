@@ -1,0 +1,309 @@
+﻿﻿@using VNCLNIC.Models;
+@model Clinic
+@*@{
+        var ckIsMorn = "";
+        var ckIsAfter = "";
+        var ckIsEven = "";
+        if (Model.IsWorkMorning == true)
+        {
+            ckIsMorn = "checked";
+        }
+    }*@
+
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Thông tin phòng khám</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<form role="form" id="form-role">
+    <div class="modal-body">
+        <input name="Id" id="Id" value="@Model.Id" type="hidden" class="form-control form-control-alternative">
+        <div class="form-group">
+            <label for="example-text-input" class="form-control-label">Tên phòng khám</label>
+            <input name="clinicname" id="clinicname" value="@Model.Name" type="text" class="form-control form-control-alternative" placeholder="Nhập tên phòng khám">
+        </div>
+        <label for="example-text-input" class="form-control-label">Địa chỉ</label>
+        <div class="row form-group">
+            <div class="col-6">
+                <div class="form-group">
+                    <input name="address" id="address" value="@Model.Address" type="text" class="form-control form-control-alternative" placeholder="Nhập số nhà - đường - phường/xã">
+                </div>
+            </div>
+            <div class="col-3">
+                <select name="CityClinic" id="CityClinic" class="form-control select2 select2-purple" data-dropdown-css-class="select2-purple">
+                    <option value="-1" selected>Tỉnh/Thành</option>
+                </select>
+            </div>
+            <div class="col-3">
+                <select name="DistrictClinic" id="DistrictClinic" class="form-control select2 select2-purple" data-dropdown-css-class="select2-purple">
+                    <option value="-1" selected>Quận/Huyện</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="example-text-input" class="form-control-label">Hotline</label>
+                    <input name="hotline" id="hotline" value="@Model.HotLine" type="text" class="form-control form-control-alternative" placeholder="Nhập hotline">
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="example-text-input" class="form-control-label">Số điện thoại</label>
+                    <input name="phone" id="phone" value="@Model.PhoneNumber" type="tel" class="form-control form-control-alternative" placeholder="Nhập số điện thoại">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="example-text-input" class="form-control-label">Email</label>
+            <input name="email" id="email" value="@Model.Email" type="email" class="form-control form-control-alternative" placeholder="Nhập địa chỉ email">
+        </div>
+        <div class="form-group">
+            <label for="example-text-input" class="form-control-label">Thêm người dùng cho phòng khám</label>
+            <select name="lsuser" id="lsuser" class="form-control select2 select2-purple" data-dropdown-css-class="select2-purple" multiple>
+                <option value="-1" disabled selected>Người dùng</option>
+            </select>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="example-text-input" class="form-control-label">Tình trạng hoạt động</label> <br />
+                    <label class="custom-toggle">
+                        <input name="isStatus" id="isStatus" type="checkbox">
+                        <span class="custom-toggle-slider rounded-circle"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="example-text-input" class="form-control-label">Buổi sáng</label> <br />
+                    <label class="custom-toggle">
+                        <input name="isMorn" id="isMorn" type="checkbox" class="checkbox">
+                        <span class="custom-toggle-slider rounded-circle"></span>
+                    </label>
+                </div>
+                <fieldset id="morn_topic"> 
+                    <div class="form-group">
+                        <label for="example-text-input" class="form-control-label">Bắt đầu:</label>
+                        <select id="startMorn" name="startMorn" class="form-control custom-select">
+                            <option value="06:00" selected>06:00</option>
+                            <option value="07:00">07:00</option>
+                            <option value="08:00">08:00</option>
+                            <option value="09:00">09:00</option>
+                        </select>
+                    </div>                
+                    <div class="form-group">
+                        <label for="example-text-input" class="form-control-label">Kết thúc:</label>
+                        <select id="stopMorn" name="stopMorn" class="form-control custom-select">
+                            <option value="10:00" selected>10:00</option>
+                            <option value="11:00">11:00</option>
+                        </select>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="example-text-input" class="form-control-label">Buổi chiều</label> <br />
+                    <label class="custom-toggle">
+                        <input name="isAfter" id="isAfter" type="checkbox">
+                        <span class="custom-toggle-slider rounded-circle"></span>
+                    </label>
+                </div>
+                <fieldset id="after_topic">
+                    <div class="form-group">
+                        <label for="example-text-input" class="form-control-label">Bắt đầu:</label>
+                        <select id="startAfter" name="startAfter" class="form-control custom-select">
+                            <option value="12:00" selected>12:00</option>
+                            <option value="13:00">13:00</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="example-text-input" class="form-control-label">Kết thúc:</label>
+                        <select id="stopAfter" name="stopAfter" class="form-control custom-select">
+                            <option value="16:00" selected>16:00</option>
+                            <option value="17:00">17:00</option>
+                        </select>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="example-text-input" class="form-control-label">Buổi tối</label> <br />
+                    <label class="custom-toggle">
+                        <input name="isEven" id="isEven" type="checkbox">
+                        <span class="custom-toggle-slider rounded-circle"></span>
+                    </label>
+                </div>
+                <fieldset id="even_topic">
+                    <div class="form-group">
+                        <label for="example-text-input" class="form-control-label">Bắt đầu:</label>
+                        <select id="startEven" name="startEven" class="form-control custom-select">
+                            <option value="18:00" selected>10:00</option>
+                            <option value="19:00">11:00</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="example-text-input" class="form-control-label">Kết thúc:</label>
+                        <select id="stopEven" name="stopEven" class="form-control custom-select">
+                            <option value="20:00" selected>10:00</option>
+                            <option value="21:00">11:00</option>
+                        </select>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Huỷ</button>
+        <button type="button" id="btn-submit-role" class="btn btn-primary">
+            <span class="btn-inner--text">Lưu</span>
+        </button>
+    </div>
+</form>
+
+<script>
+    //Hiding view start stop time
+    $("#morn_topic").hide();
+    $("#after_topic").hide();
+    $("#even_topic").hide();
+
+    $("#CityClinic").change(function () {
+        $('#DistrictClinic').find('option').not(':first').remove();
+        fetch(window.location.origin + "/Clinic/District?CityId=" + $("#CityClinic").val())
+            .then(res => res.json())
+            .then(data => {
+                $("#DistrictClinic").select2({
+                    miniumInputLength: 2,
+                    data: data,
+                    dropdownParent: $('#ClinicModel')
+                });
+            });
+    });
+
+    $(document).ready(function (e) {
+        $('#ClinicModel').modal('show');
+
+        $(".js-select2").select2({
+            placeholder: {
+                id: '-1',
+                text: 'Nhân viên'
+            }
+        });
+
+        $("#isMorn").click(function (event) {
+            if ($(this).is(":checked"))
+                $("#morn_topic").show();
+            else
+                $("#morn_topic").hide();
+        });
+
+        $("#isAfter").click(function (event) {
+            if ($(this).is(":checked"))
+                $("#after_topic").show();
+            else
+                $("#after_topic").hide();
+        });
+
+        $("#isEven").click(function (event) {
+            if ($(this).is(":checked"))
+                $("#even_topic").show();
+            else
+                $("#even_topic").hide();
+        });
+
+        fetch(window.location.origin + "/Clinic/City")
+            .then(res => res.json())
+            .then(data => {
+                $("#CityClinic").select2({
+                    miniumInputLength: 2,
+                    data: data,
+                    placeholder: '',
+                    dropdownParent: $('#ClinicModel')
+                });
+            });
+
+        fetch(window.location.origin + "/Clinic/ClinicUser")
+            .then(res => res.json())
+            .then(data => {
+                $("#lsuser").select2({
+                    miniumInputLength: 2,
+                    data: data,
+                    allowClear: true,
+                    closeOnSelect: false,
+                    dropdownParent: $('#ClinicModel')
+                });
+            });
+    });
+
+    $('#btn-submit-role').click(function (e) {
+        $("#form-role").submit();
+    });
+
+    $("#form-role").submit(function (e) {
+        e.preventDefault();
+        var serializedForm = $(this).serializeArray();
+        //console.log(serializedForm);
+
+        var name = $('#clinicname').val();
+        var hotline = $('#hotline').val();
+        var email = $('#email').val();
+        var phone = $('#phone').val();
+        var address = $('#address').val();
+        var startMorn = $("#startMorn").val();
+        var startAfter = $('#startAfter').val();
+        var startEven = $('#startEven').val();
+        var stopMorn = $('#stopMorn').val();
+        var stopAfter = $('#stopAfter').val();
+        var stopEven = $('#stopEven').val();
+        var lsuser = $('#lsuser').val();
+        var idCity = $('#CityClinic').val();
+        var idDistrict = $('#DistrictClinic').val();
+
+        var status = false;
+        var isMorn = false;
+        var isAfter = false;
+        var isEven = false;
+
+        $.each(serializedForm, function (i, field) {
+            if (field.name == "isStatus") { status = true }
+            if (field.name == "isMorn") { isMorn = true }
+            if (field.name == "isAfter") { isAfter = true }
+            if (field.name == "isEven") { isEven = true }
+        });
+
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            data: {
+                name: name, address: address, hotline: hotline, phone: phone,
+                email: email, idCity: idCity, idDistrict: idDistrict, status: status,
+                isMorn: isMorn, isAfter: isAfter, isEven: isEven, startMorn: startMorn,
+                startAfter: startAfter, startEven: startEven,
+                stopMorn: stopMorn, stopAfter: stopAfter, stopEven: stopEven,
+                lsuser: lsuser
+            },
+            url: "/Clinic/AddClinic",
+            success: function (item) {
+                if (item.success) {
+                    $('#ClinicModel').modal('hide');
+                    swal({ title: "Success", text: item.message, type: "success", buttonsStyling: !1, confirmButtonClass: "btn btn-success" });
+
+                    doCommit();
+                } else {
+                    swal({ title: "Failed", text: item.message, type: "warning", buttonsStyling: !1, confirmButtonClass: "btn btn-warning" })
+                }
+            },
+            error: function (err) {
+                $('#ClinicModel').modal('hide');
+                setTimeout(function () {
+                    swal({ title: "Failed", text: "Lưu dữ liệu không thành công", type: "warning", buttonsStyling: !1, confirmButtonClass: "btn btn-warning" })
+                }, 500);
+                console.log(err);
+            }
+        });
+    });
+</script>

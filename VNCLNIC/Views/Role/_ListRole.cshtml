@@ -1,0 +1,119 @@
+﻿@using VNCLNIC.Common.Tools;
+@using VNCLNIC.Models;
+@using VNCLNIC.Data;
+@using VNCLNIC.ViewModels;
+@model List<RoleViewModel>
+
+<!-- Light table -->
+<div class="table-responsive">
+    <table class="table align-items-center table-flush">
+        @if (Model.Count == 0)
+        {
+            @Html.Raw("<span class='text-center'>Không tìm thấy dữ liệu.</span>");
+        }
+        else
+        {
+
+            <thead class="thead-light">
+                <tr>
+                    <th style="width: 1%" id="indexstt">
+                        <a href="#">STT</a>
+                    </th>
+                    @Html.Raw(ViewBag.GridHeader)
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody class="list">
+                @{
+                    int dem = 1;
+                    foreach (var i in Model)
+                    {
+                        <tr>
+                            <td data-text="STT" class="m-none">
+                                @dem
+                                @{dem++;}
+                            </td>
+                            <td data-text="Tên nhóm quyền">
+                                @i.RoleName
+                            </td>
+                            <td data-text="Trạng thái">
+                                @if (i.IsActive == true)
+                                {
+                                    <span class="badge badge-dot mr-4">
+                                        <i class="bg-success"></i>
+                                        <span class="status">Kích hoạt</span>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-dot mr-4">
+                                        <i class="bg-danger"></i>
+                                        <span class="status">Ngưng kích hoạt</span>
+                                    </span>
+                                }
+                            </td>
+
+                            <td data-text="Quyền cao nhất?">
+                                @if (i.IsRoot == true)
+                                {
+                                    <span class="badge badge-primary">Có</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-secondary">Không</span>
+                                }
+                            </td>
+
+                            <td class="text-right">
+                                <div class="dropdown">
+                                    <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                        @using (Ajax.BeginForm("Detail", "Role", new AjaxOptions
+                                        {
+                                            InsertionMode = InsertionMode.Replace,
+                                            HttpMethod = "GET",
+                                            LoadingElementId = "loader",
+                                            UpdateTargetId = "modal-body-detail"
+
+                                        }, new { @id = "viewform" + i.Id }))
+                                        {
+                                            <input type="hidden" name="id" value="@i.Id" />
+                                            <button class="dropdown-item btn" type="submit">Chi tiết</button>
+                                        }
+                                        @using (Ajax.BeginForm("Update", "Role", new AjaxOptions
+                                        {
+                                            InsertionMode = InsertionMode.Replace,
+                                            HttpMethod = "GET",
+                                            LoadingElementId = "loader",
+                                            UpdateTargetId = "modal-body-update"
+
+                                        }, new { @id = "editform" + i.Id }))
+                                        {
+                                            <input type="hidden" name="id" value="@i.Id" />
+                                            <button class="dropdown-item btn" type="submit">Chỉnh sửa</button>
+                                        }
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        }
+    </table>
+</div>
+<!-- Card footer -->
+<div class="card-footer py-4">
+    <nav aria-label="...">
+        <ul class="pagination justify-content-end mb-0">
+            @{
+                if (Model.Count > 0)
+                {
+                    @Html.Raw(ViewBag.Paging)
+                }
+            }
+        </ul>
+    </nav>
+</div>

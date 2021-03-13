@@ -1,0 +1,105 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_LayoutGuest.cshtml";
+}
+
+<div class="header pb-2 d-flex align-items-center" style="min-height: 500px; background-image: url(/Content/image/PUPILO-01-850x505.jpg); background-size: cover; background-position: center top;">
+    <!-- Mask -->
+    <span class="mask bg-gradient-default opacity-7"></span>
+    <!-- Header container -->
+    <div class="container align-items-center">
+        <div class="row">
+            <div class="col-lg-12 col-md-10 text-center">
+                <h1 class="display-3 text-white">Tìm kiếm phòng khám</h1>
+                <br>
+                @using (Ajax.BeginForm("Search", "Home", new AjaxOptions
+                {
+                    InsertionMode = InsertionMode.Replace,
+                    HttpMethod = "GET",
+                    LoadingElementId = "loader",
+                    UpdateTargetId = "list-clinic-result"
+
+                }, new { @id = "searchForm" }))
+                {
+                    <input type="hidden" id="type" name="type" value="0" />
+                    <div class="div-transparent-black">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-12">
+                                <div class="input-group input-group-alternative input-group-merge">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                    </div>
+                                    <input name="searchHome" id="searchHome" class="form-control" placeholder="Tìm kiếm" type="text">
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-12">
+                                <select name="CityHome" id="CityHome" class="form-control select2 select2-purple" data-dropdown-css-class="select2-purple">
+                                    <option value="-1" selected>Tỉnh/Thành</option>
+                                    @foreach (var item in ViewBag.City)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-lg-3 col-md-12">
+                                <select name="DistrictHome" id="DistrictHome" class="form-control select2 select2-purple" data-dropdown-css-class="select2-purple">
+                                    <option value="-1" selected>Quận/Huyện</option>
+                                </select>
+                            </div>
+                            <input type="hidden" id="selPage" name="selPage" value="1" />
+                            <div class="col-lg-3 col-md-8">
+                                <button type="submit" class="btn btn-warning w-100" id="doFilter">
+                                    <i class="fa fa-search"></i>
+                                    Tìm kiếm
+                                </button>
+                            </div>
+                            <input type="hidden" id="ClinicTypeHome" name="ClinicTypeHome" value="" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt--6" id="list-clinic-result">
+</div>
+<div class="bg-white">
+    <div class="card text-white border-0">
+        <img class="card-img" src="~/Content/image/gem.png" alt="Card image">
+        <div class="card-img-overlay d-flex align-items-baseline">
+            <div class="container mt-200 text-center w-50">
+                <h2 class="display-1 card-title text-center mb-2 mt-lg-4 text-primary">VNCLINIC</h2>
+                <h4 class="h2 card-text text-center mt-100">Hỗ trợ tìm kiếm phòng khám đặt lịch theo ngày, theo báo sĩ.</h4>
+                <br />
+                <a href="~/Home/Booking" class="btn btn-primary">
+                    Đặt lịch ngay
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("#CityHome").change(function () {
+        $('#DistrictHome').find('option').not(':first').remove();
+        fetch(window.location.origin + "/Home/District?CityId=" + $("#CityHome").val())
+            .then(res => res.json())
+            .then(data => {
+                $("#DistrictHome").select2({
+                    miniumInputLength: 2,
+                    data: data
+                });
+            });
+    });
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+    function showPosition(position) {
+        alert(position.coords.latitude + ',' + position.coords.longitude);
+    }
+</script>

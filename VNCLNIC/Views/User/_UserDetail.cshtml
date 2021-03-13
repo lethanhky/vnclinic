@@ -1,0 +1,141 @@
+﻿@using VNCLNIC.Common.Enums;
+@using VNCLNIC.Models;
+@model  User
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Thông tin người dùng</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+
+    <div class="row">
+        <div class="col-md-8">
+            <table class="tab_bordernone">
+                <tbody>
+                    <tr>
+                        <td style="width:220px">Tên tài khoản</td>
+                        <td class="s">:</td>
+                        <td>@Model.Username</td>
+                    </tr>
+                    <tr>
+                        <td style="width:220px">Tên người dùng</td>
+                        <td class="s">:</td>
+                        <td>@Model.FullName</td>
+                    </tr>
+                    <tr>
+                        <td style="width:220px">Email</td>
+                        <td class="s">:</td>
+                        <td>@Model.Email</td>
+                    </tr>
+                    <tr>
+                        <td style="width:220px">Số điện thoại</td>
+                        <td class="s">:</td>
+                        <td>@Model.PhoneNumber</td>
+                    </tr>
+                    <tr>
+                        <td style="width:220px">Địa chỉ</td>
+                        <td class="s">:</td>
+                        <td>@Model.Address</td>
+                    </tr>
+                    <tr>
+                        <td style="width:220px">Trạng thái</td>
+                        <td class="s">:</td>
+                        <td>
+                            @if (Model.IsActive == true)
+                            {
+                                <span class="badge badge-success">Kích hoạt</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">Ngưng kích hoạt</span>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:220px">Loại người dùng thuộc</td>
+                        <td class="s">:</td>
+                        <td>
+                            @if (Model.UserType == UserType.CUSTOMER)
+                            {
+                                <span>Khách hàng</span>
+                            }
+                            else if (Model.UserType == UserType.CLINIC)
+                            {
+                                <span>Phòng khám</span>
+                            }
+                            else
+                            {
+                                <span>Hệ thống</span>
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <div style="text-align:center">
+                <div>
+                    @if (Model.Image != null)
+                    {
+                        <img src="@{
+                                var url = string.Format ( "{0}://{1}{2}",Request.Url.Scheme,Request.Url.Authority,Url.Content ( "~" ) );
+                                @url
+                        }Resource/VCIMG?appx=@Model.Image" id="Avatar_dis" style="width:50%;height:50%" />
+                    }
+                    else
+                    {
+                        <img src="~/Content/image/person-512.png" id="Avatar_dis" style="width:50%;height:50%" />
+                    }
+                </div>
+            </div>
+            <div style="text-align:center">Logo</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label>Các nhóm quyền sở hữu :</label>
+            @{
+                int tempCount = 0; //biến đếm để chia table ra là 2 cột
+                string html = "";// xuất giao diện table
+            }
+
+            @foreach (var item in Model.Roles)
+            {
+                if (tempCount % 2 == 0)
+                {
+                    html += "<tr>";
+                }
+                html += "<td><span class='badge badge-primary'>" + item.RoleName + "</span>"
+                    + "</td>";
+
+                if (tempCount % 2 > 0)
+                {
+                    html += "</tr>";
+                }
+
+                tempCount++;
+            }
+            @{
+                if (tempCount % 2 > 0)
+                {
+                    html += "<td>&nbsp;</td></tr>";
+                }
+            }
+
+
+            @{html = "<table class='table table-bordered table-hover' style='width:100%;'>" + html + "</table>";}
+
+            @Html.Raw(html)
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+</div>
+<script>
+    $(document).ready(function (e) {
+        $('#UserDetailModel').modal('show');
+    });
+</script>

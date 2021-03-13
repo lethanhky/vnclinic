@@ -1,0 +1,244 @@
+﻿
+<style>
+    td.fc-day.fc-past {
+        background-color: #EEEEEE;
+    }
+</style>
+<div class="card-body">
+    <div class="header header-dark bg-primary pb-6 content__title content__title--calendar">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-6">
+                        <h6 class="fullcalendar-title h2 text-white d-inline-block mb-0 text-uppercase">Tháng ba 2021</h6>
+                    </div>
+                    <div class="col-lg-6 mt-3 mt-lg-0 text-lg-right">
+                        <button type="button" class="fullcalendar-btn-prev btn btn-sm btn-neutral">
+                            <i class="fas fa-angle-left"></i>
+                            Tháng trước
+                        </button>
+                        <button type="button" class="fullcalendar-btn-next btn btn-sm btn-neutral">
+                            Tháng sau
+                            <i class="fas fa-angle-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="card card-calendar">
+
+                <!-- Card header -->
+                <div class="card-header">
+                    <!-- Title -->
+                    <h5 class="h3 mb-0">Lịch</h5>
+                </div>
+                <!-- Card body -->
+                <div class="card-body p-0">
+
+                    <div class="calendar" data-toggle="calendar" id="calendar"></div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal - Add new event -->
+        <!--* Modal header *-->
+        <!--* Modal body *-->
+        <!--* Modal footer *-->
+        <!--* Modal init *-->
+        <div class="modal fade" id="new-event" tabindex="-1" role="dialog" aria-labelledby="new-event-label" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog modal-dialog-centered modal-secondary" role="document">
+                <div class="modal-content">
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form class="new-event--form">
+                            <div class="form-group">
+                                <label class="form-control-label">Chuyên khoa</label>
+                                <select name="Department" id="Department" class="new-event--title form-control form-control-alternative new-event--title select2 select2-purple" data-dropdown-css-class="select2-purple">
+                                    <option value="-1" selected>Chọn chuyên khoa</option>
+                                </select>
+                            </div>
+                            <input type="hidden" class="new-event--start" value="2021-03-12">
+                            <input type="hidden" class="new-event--end" value="2021-03-04">
+                        </form>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn float-left btn-link" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-primary new-event--add">Đồng ý</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal - Edit event -->
+        <!--* Modal body *-->
+        <!--* Modal footer *-->
+        <!--* Modal init *-->
+        <div class="modal fade" id="edit-event" tabindex="-1" role="dialog" aria-labelledby="edit-event-label" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog modal-dialog-centered modal-secondary" role="document">
+                <div class="modal-content">
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form class="edit-event--form">
+                            <div class="form-group">
+                                <label class="form-control-label">Chuyên khoa</label>
+                                <select name="DepartmentEdit" id="DepartmentEdit" class="edit-event--title form-control form-control-alternative select2 select2-purple" data-dropdown-css-class="select2-purple">
+                                    <option value="-1" selected>Chọn chuyên khoa</option>
+                                </select>
+                            </div>
+                            <input type="hidden" class="edit-event--id" value="2068326">
+                        </form>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-calendar="delete">Xoá</button>
+                        <button type="button" class="btn btn-link ml-auto" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-primary" data-calendar="update">Cập nhật</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <button class="float-left btn btn-primary "><i class="fas fa-angle-left"></i> Quay lại</button>
+        <button class="float-right btn btn-primary" id="btn-next-step">Tiếp tục <i class="fas fa-angle-right"></i></button>
+    </div>
+</div>
+<script src="~/Content/argon/vendor/fullcalendar/dist/locale/vi.js"></script>
+@*<script src="~/content/argon/js/argon.min.js"></script>*@
+<script>
+     var calendarLich = $('#calendar');
+    calendarLich.fullCalendar({
+        lang: 'vi',
+        contentHeight: "auto",
+        theme: !1,
+        buttonIcons: {
+            prev: " ni ni-bold-left",
+            next: " ni ni-bold-right"
+        },
+        header: {
+            right: "next",
+            center: "title, ",
+            left: "prev"
+        },
+        viewRender: function (a) {
+            console.log('a',a);
+            calendarLich.fullCalendar("getDate").month(), $(".fullcalendar-title").html(a.title)
+        },
+        dayClick: function (date, e, view) {
+            if (moment().format('YYYY-MM-DD') === date.format('YYYY-MM-DD') || date.isAfter(moment())) {
+                var a = moment(e).toISOString();
+                var b = moment(date).toISOString();
+                $("#new-event").modal("show"), $(".new-event--title").val(""), $(".new-event--start").val(b), $(".new-event--end").val(a)
+
+            } else {
+                swal({
+                    title: "Vui lòng chọn ngày hợp lệ !", type: "warning", buttonsStyling: !1, confirmButtonText: "Đồng ý", confirmButtonClass: "btn btn-warning"
+                })
+            }
+        },
+        eventClick: function (e, a) {
+            $("#edit-event").modal("show"), $(".edit-event--id").val(e.id), $(".edit-event--title").val(e.departId).trigger("change")
+        }
+    });
+    $(".new-event--add").on("click", function () {
+        console.log(this);
+        var valueDe = $(".new-event--title option:selected").text();
+        var valueDeId = $(".new-event--title option:selected").val();
+        if (valueDeId > 0) {
+            t = {
+                Job: function () {
+                    return (Date.now().toString().substr(6));
+                }
+            };
+            if (valueDe) {
+
+                var allEvent = calendarLich.fullCalendar('clientEvents');
+
+                if (allEvent.length > 0) {
+                    allEvent.map(function (e) {
+                        calendarLich.fullCalendar("removeEvents", e.id);
+                    })
+                }
+
+                var myEvent = {
+                    id: t.Job(),
+                    title: valueDe,
+                    start: $(".new-event--start").val(),
+                    end: $(".new-event--end").val(),
+                    className: "btn-neutral bg-gradient-green border-0",
+                    departId: valueDeId
+                };
+
+                calendarLich.fullCalendar("renderEvent", myEvent);
+                $(".new-event--form")[0].reset()
+                $("#new-event").modal("hide");
+                $(".new-event--title").closest(".form-group").addClass("has-danger");
+                $(".new-event--title").closest(".form-group").removeClass("has-danger");
+                $("#btn-next-step").focus();
+            }
+        }
+    });
+    $("body").on("click", "[data-calendar]", function () {
+        var a = $(this).data("calendar"),
+            t = $(".edit-event--id").val(),
+            
+            n = $(".edit-event--title").val(),
+            i = $(".edit-event--description").val(),
+            o = $("#edit-event .event-tag input:checked").val(),
+            s = calendarLich.fullCalendar("clientEvents", t);
+        "update" === a && ("" != n ? (s[0].title = n, s[0].description = i, s[0].className = [o], console.log(o), calendarLich.fullCalendar("updateEvent", s[0]), $("#edit-event").modal("hide")) : ($(".edit-event--title").closest(".form-group").addClass("has-error"), $(".edit-event--title").focus())), "delete" === a && ($("#edit-event").modal("hide"), setTimeout(function () {
+            swal({
+                title: "Bạn có chắc chắn xoá?",
+                type: "warning",
+                showCancelButton: !0,
+                buttonsStyling: !1,
+                confirmButtonClass: "btn btn-danger",
+                confirmButtonText: "Đồng ý",
+                cancelButtonClass: "btn btn-secondary",
+                cancelButtonText: "Huỷ",
+            }).then(a => {
+                console.log('t', t);
+                a.value && (calendarLich.fullCalendar("removeEvents", t), swal({
+                    title: "Đã xoá!",
+                    type: "success",
+                    buttonsStyling: !1,
+                    confirmButtonClass: "btn btn-primary"
+                }))
+            })
+        }, 200))
+    });
+    $("body").on("click", "[data-calendar-view]", function (a) {
+        a.preventDefault(), $("[data-calendar-view]").removeClass("active"), $(this).addClass("active");
+        var t = $(this).attr("data-calendar-view");
+        calendarLich.fullCalendar("changeView", t)
+    });
+    $(".fullcalendar-btn-next").on("click", function (a) {
+        a.preventDefault(), calendarLich.fullCalendar("next")
+    });
+
+    $(".fullcalendar-btn-prev").on("click", function (a) {
+        a.preventDefault(), calendarLich.fullCalendar("prev")
+    });
+    $('#Department').find('option').not(':first').remove();
+    fetch(window.location.origin + "/Home/Departments")
+        .then(res => res.json())
+        .then(data => {
+            $("#Department").select2({
+                miniumInputLength: 2,
+                data: data,
+            });
+        });
+    $('#DepartmentEdit').find('option').not(':first').remove();
+    fetch(window.location.origin + "/Home/Departments")
+        .then(res => res.json())
+        .then(data => {
+            $("#DepartmentEdit").select2({
+                miniumInputLength: 2,
+                data: data,
+            });
+        });
+</script>

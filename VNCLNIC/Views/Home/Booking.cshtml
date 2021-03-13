@@ -1,0 +1,67 @@
+﻿
+@{
+    ViewBag.Title = "Booking";
+    Layout = "~/Views/Shared/_LayoutGuest.cshtml";
+}
+
+
+<div class="min-vh-100">
+    @using (Ajax.BeginForm("BookingStep", "Home", new AjaxOptions
+    {
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "GET",
+        LoadingElementId = "loader",
+        UpdateTargetId = "mycontainer"
+
+    }, new { @id = "bookingForm" }))
+    {
+        <input type="hidden" name="step" id="step"/>
+        <div class="header pb-4 pt-lg-7 d-flex align-items-center" style="min-width:200px">
+            <!-- Mask -->
+            <span class="mask bg-gradient-default opacity-7"></span>
+            <!-- Header container -->
+            <div class="container align-items-center">
+                <div class="row">
+                    <div class="col-lg-12 col-md-10 text-center">
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><a class="btn btn-white text-primary" href="#" data-toggle="tooltip" data-placement="bottom" title="Chọn phòng khám">1. Tìm kiếm phòng khám</a></li>
+                                <li class="breadcrumb-item"><a class="btn btn-white text-primary" href="#" data-toggle="tooltip" data-placement="bottom" title="Chọn ngày, chuyên khoa">2. Ngày khám, chuyên khoa</a></li>
+                                <li class="breadcrumb-item"><a class="btn btn-white text-black-50" href="#" data-toggle="tooltip" data-placement="bottom" title="Chọn bác sĩ và giờ khám">3. Bác sĩ, giờ khám</a></li>
+                                <li class="breadcrumb-item"><a onclick="ReloadComments();" class="btn btn-white text-black-50" href="#" data-toggle="tooltip" data-placement="bottom" title="Xác nhận lại thông tin">4. Thông tin đặt lịch</a></li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container pt-lg-3">
+            <div class="card card-frame" id="mycontainer">
+            </div>
+        </div>
+    }
+
+    @*<div class="card-body">
+        <div class="row">
+            <div class="col-lg-12 col-md-10 text-center">
+                <div class="container pt-lg-3">
+                    <div class="card card-frame">
+
+                        <div class="card-body">
+                            <button class="float-right btn btn-primary">Tiếp tục <i class="fas fa-angle-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>*@
+
+</div>
+
+<script>
+    function ReloadComments(){
+        $("#bookingForm").submit();
+    }
+
+</script>

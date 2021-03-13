@@ -1,0 +1,72 @@
+﻿@using VNCLNIC.Models.Data;
+@model  ClinicType
+
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Thông tin loại phòng khám</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<form role="form" id="form-role">
+    <div class="modal-body">
+
+        <input name="Id" id="Id" value="@Model.Id" type="hidden" class="form-control form-control-alternative">
+
+        <div class="form-group">
+            <label for="example-text-input" class="form-control-label">Tên loại phòng khám</label>
+            <input name="Name" id="Name" value="@Model.Name" type="text" class="form-control form-control-alternative" placeholder="Nhập tên loại phòng khám">
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Huỷ</button>
+        <button type="button" id="btn-submit-role" class="btn btn-primary">
+            <span class="btn-inner--text">Lưu</span>
+        </button>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function (e) {
+        $('#RoleModel').modal('show');
+    });
+
+    $('#btn-submit-role').click(function (e) {
+        $("#form-role").submit();
+    });
+
+
+    $("#form-role").submit(function (e) {
+        e.preventDefault();
+        var serializedForm = $(this).serializeArray();
+        console.log(serializedForm);
+        var Id = $('#Id').val();
+        var name = $('#Name').val();
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            data: {
+                Id: Id,
+                name: name
+            },
+            url: "/ClinicType/AddOrUpdate",
+            success: function (item) {
+                if (item.success) {
+                    $('#RoleModel').modal('hide');
+                    swal({ title: "Success", text: item.message, type: "success", buttonsStyling: !1, confirmButtonClass: "btn btn-success" });
+
+                    doCommit();
+                } else {
+                    swal({ title: "Failed", text: item.message, type: "warning", buttonsStyling: !1, confirmButtonClass: "btn btn-warning" })
+                }
+            },
+            error: function (err) {
+                $('#RoleModel').modal('hide');
+                setTimeout(function () {
+                    swal({ title: "Failed", text: "Lưu dữ liệu không thành công", type: "warning", buttonsStyling: !1, confirmButtonClass: "btn btn-warning" })
+                }, 500);
+                console.log(err);
+            }
+        });
+    });
+</script>

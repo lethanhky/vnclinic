@@ -1,0 +1,40 @@
+﻿<div class="modal-body">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <br />
+    <div id="googleMap" style="height:400px"></div>
+</div>
+<script>
+    $(document).ready(function (e) {
+        $('#MapModel').modal('show');
+    });
+    var lat = parseFloat('@ViewBag.Lat');
+    var lng = parseFloat('@ViewBag.Lng');
+
+    function initMap() {
+        let map;
+        const bangalore = { lat: lat, lng: lng};
+        map = new google.maps.Map(document.getElementById("googleMap"), {
+            center: bangalore,
+            zoom: 15,
+        });
+        addMarker(bangalore, map);
+    }
+
+    // Adds a marker to the map.
+    function addMarker(location, map) {
+        const labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        let labelIndex = 0;
+        // Add the marker at the clicked location, and add the next-available label
+        // from the array of alphabetical characters.
+        new google.maps.Marker({
+            position: location,
+            draggable: true,
+            label: labels[labelIndex++ % labels.length],
+            map: map,
+        });
+    }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAah7bcDDrZpSZmXEtr9rOkSjAcfJ9ull4&callback=initMap&libraries=&v=weekly" async></script>
